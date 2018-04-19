@@ -9,7 +9,7 @@ library(tidyverse)
 
 # intergers ---------------------------------------------------------------
 
-#how to gen a  seq of intergers data
+#hgen a  seq of intergers data
 
 interger_r <- as.integer(seq(5, 14, by = 1))
 
@@ -20,7 +20,7 @@ summary(interger_r) #summary data of intergers
 
 #gen a seq of continuous data
 
-numeric_r <- seq(23, 55, length.out = 10)
+numeric_r <- seq(23, 55, length.out = 10)#create 10 values of a sequence from 23 to 55 
 
 summary(numeric_r) #summary stats off continuos data
 
@@ -28,9 +28,12 @@ summary(numeric_r) #summary stats off continuos data
 # Dates -------------------------------------------------------------------
 
 #performing arithmetics with dates 
-as.Date("2005-12-31") - as.Date("2005-12-12")
+as.Date("2005-12-31") - as.Date("2005-12-12") #number of days from 12-31 /12/2005
 #or
-dates_R <- seq(as.Date("2005-12-16"), as.Date("2005-12-25"), by = "day")
+dates_R <- seq(as.Date("2005-12-16"), as.Date("2005-12-25"), by = "day") 
+#create a sequence of dates 
+
+dates_R
 
 summary(dates_R)
 
@@ -38,6 +41,8 @@ summary(dates_R)
 # Data frames -------------------------------------------------------------
 
 #creating data frames
+#variables wich share similar properties.
+
 df_r <- data.frame(intergers = interger_r,
                    numeric = numeric_r,
                    dates = dates_R)
