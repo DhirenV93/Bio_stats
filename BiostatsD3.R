@@ -5,81 +5,90 @@
 
 #generate a cullen and fray graph- determine the type of distribution of data
 
-library(fitdistrpl) 
+
+library(fitdistrplus) 
 library(logspline) 
 
-#to conduct a t-test make sure that the following applies to your data
+
+# ASSUMPTIONS -------------------------------------------------------------
+
+#To conduct a t-test make sure that the following applies to your data:
 #the dependent variable must be continuous (i.e. it is measured at the interval or ratio level),
-t#he observations in the groups being compared are independent of each other,
-#the data are normally distributed, and
-#that the data are homoscedastic, and in particular, that there are no outliers.
+#the observations in the groups being compared are independent of each other,
+#the data are NORMALLY DISTRIBUTED, and
+#that the data are HOMOSCEDASTIC, and in particular, that there are no outliers.
 
 
-#generate normal data to see what it looks like
+
+
+#generate normal data 
 r.norm <- rnorm(n= 1000, mean = 13, sd = 1)
 
-#graphs- what it looks like
+#graphs- what this data looks like
 hist(r.norm)
 
 
-#check what kind of data you have using descdist
+#check what kind of data you have, using descdist function
+# requires library(fitdistrplus)
 descdist(r.norm, discrete = FALSE, boot = 100)
-#discrete or not 
 #we have normal dist data as indicated by blue dot
 
 #uniform data
 
-y <- runif(100)
-par(mfrow = c(2, 2))
+y <- runif(100) 
+par(mfrow = c(2, 2)) 
 plot(x = c(1:100), y = y)
 hist(y)
 descdist(y, discrete = FALSE)
+y
 
 
 
 # t-test ------------------------------------------------------------------
-#t-test when testing two variables
+#t-test used when testing two variables
 #anova for multiple variables
 
 
 library(tidyverse)
 #create normal data
 #random normal
-r_dat <- data.frame(dat = c(rnorm(n = 1000, mean = 10, sd = 3),
+r_dat <- data.frame(dat = c(rnorm(n = 1000, mean = 10, sd = 3), #combine a dat frame
                             rnorm(n = 1000 , mean = 8, sd = 2)),
-                    sample = c(rep("A", 1000), rep("B", 1000)))
+                    sample = c(rep("A", 1000), rep("B", 1000))) 
 
-#check assumptions
-#normality
-#use shapiro-wilk test
+#1st check NORMALITY----use shapiro-wilk test
 
 #tests all data together
+shapiro.test(r_dat$dat) #but thios wrong as its not fpr the groups A and B
 
 r_dat %>%
   group_by(sample) %>% 
-  summarise(r.norm.dist = as.numeric(shapiro.test(dat)[2]))
-#data is normal when p >0.5
-# not normal when p <=0.5
+  summarise(r.norm.dist = as.numeric(shapiro.test(dat)[2])) #use [2] to obtain p-value
 
+#data is normal when p >0.05 (above) 
+# not normal when p <=0.05
 
-#check for homoscedasticity
+# 2d check for HOMOSCEDASTICITY
 #many ways to check for homoscedasticity
 #homoscedascity = the similiarity of variance between  sample sets
-#for now we will simply say that thris assumption is met when the variance of the
+#for now we will simply say that this assumption is met when the variance of the
 # sammples are not more than 2-4 times greater than one anoth
 
 
 #check everything at once 
-var(r_dat$dat) #but this is wrong because this checks all the data
-
-r_dat %>%
+var(r_dat$dat) #but this is wrong because this checks all the data not groups A and B
+ 
+#therefore
+ #r_norm_dist  p valu
+r_dat %>% 
   group_by(sample) %>% 
-  summarise(r.norm.dist = as.numeric(shapiro.test(dat)[2])) #r_norm_dist  p value
+  summarise(sample_var = var(dat))
+
+#one sided one sample t-test --------------------------------------------------------
+#1 sample set of data tesdted against a known population mean
 
 
-
-#one sample t-test --------------------------------------------------------
-# create a single sample of random normal data
+#create a single sample of random normal data
 
 r_one <- data.frame(dat = rnorm(n = 20, mean = 20, sd = 5),
                     sample = "A")
@@ -90,7 +99,7 @@ t.test(r_one$dat, mu = 20) #mu population mean
 
 
 
-# pick a side -------------------------------------------------------------
+# Two sided one sample t-test -------------------------------------------------------------
 
 # are these data smaller/less than the population mean
 
@@ -116,9 +125,10 @@ r_two <- data.frame(dat = c(rnorm(n = 20, mean = 4, sd = 1),
                     sample = c(rep("A", 20), rep("B", 20)))
 # perform t-test
 # note how we set the `var.equal` argument to TRUE because we know 
-# our data has the same SD (they are simulated as such!)
+# our data has the same SD 
 
 t.test(dat ~ sample, data = r_two, var.equal = TRUE)
+
 
 
 t.test(dat ~ sample, data = r_two, var.equal = TRUE, alternative = "less")
@@ -163,6 +173,7 @@ ggplot(ecklonia_sub, aes(x = variable, y = value, fill = site)) +
 #we hypothesise that
 #H0: Stipe mass at Batsata Rock is not greater than at Boulders Beach.
 #H1: Stipe mass at Batsata Rock is greater than at Boulders Beach.
+
 
 ecklonia_sub %>% 
   group_by(site) %>% 

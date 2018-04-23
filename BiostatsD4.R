@@ -14,9 +14,11 @@ chicks_sub <- chicks %>%
 
 
 #t-test
+#two variables weight and diet
 t.test(weight ~ Diet, data = chicks_sub)
 
 #we do not reject the null hypothesis
+#H0: chick weight is not affected by diet
 
 
 # 1way ANOVA --------------------------------------------------------------
@@ -51,7 +53,7 @@ TukeyHSD(chicks.aov) #compares diets to one another
 #boxplot
 ggplot(Chicks21, aes(x = Diet, y = weight, fill = Diet))+
   geom_boxplot(notch = TRUE, colour = "grey50") +
-  geom_segment(aes(X = Diet, xend = , y = weight, yend = weight/2))
+  geom_segment(aes(x = Diet, xend =Diet , y = weight, yend = weight/2))
 
 #segments showing confidence intervals 
 #Data frame of segments
@@ -62,7 +64,7 @@ chicks.tukey$pairs <- as.factor(row.names(chicks.tukey))
 
 ggplot(chicks.tukey, aes(x = pairs, y = diff)) +
 geom_segment(aes(x = lwr, xend =upr, y= pairs, yend = pairs)) +
-  geom_vline(xintercept = 0, linetype = "dotted")) +
+  geom_vline(xintercept = 0, linetype = "dotted")
 
  
 

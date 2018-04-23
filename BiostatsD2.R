@@ -51,9 +51,13 @@ r.dat %>%
 
 r.dat %>% 
   summarise(r.med = median(dat))
+#or
+median(r.dat$dat)
+
 
 #variance = sum of (each value - the mean )sqrd / count of samples -1
 
+#manual computation
 r.dat %>% 
   mutate(r.error = dat - mean(dat), #value-mean
          r.error.sqr = r.error * r.error) %>% #sqrd (value- mean)
@@ -69,6 +73,8 @@ r.dat %>%
 
 
 # exercise ----------------------------------------------------------------
+#create summary stats for chicken data
+
 
 summary(ChickWeight$weight)
 
@@ -100,6 +106,8 @@ satime <-now_nownow
 
 sa.time <- satime %>% 
   mutate(human = seq(1, n(),1)) #create a column by numbering the amount of observations
+
+
 
 #create long data
 sa.long <- sa.time %>% 
