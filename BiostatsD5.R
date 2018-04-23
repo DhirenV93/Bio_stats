@@ -2,7 +2,8 @@
 #linear regressions, and correlations
 
 library(tidyverse)
-library(Rmisc) 
+library(ggpubr)
+# library(Rmisc) # Unfortunately this overrides many dplyr functions
 
 # load data ---------------------------------------------------------------
 
@@ -29,7 +30,7 @@ snakes.summary<- snakes %>%
 
 #Rmisc pckge summarySE to calc the SE  and CI
 
-snakes.summary2 <- summarySE(data = snakes,
+snakes.summary2 <- Rmisc::summarySE(data = snakes,
                              measurevar = "openings",
                              groupvars = c("day"))
 
@@ -81,20 +82,20 @@ plot(snakes.tukey)
 
 
 ggplot(data = snakes, aes(x = as.numeric(day), y = openings, colour = snake))+
-         geom_line(size =3)+
-         geom_point(size =4)
+         geom_line(size = 3)+
+         geom_point(size = 4)
 # exercise ----------------------------------------------------------------
  #find data from github
 
 
-moths<-read.csv("moths_traps.csv") %>% 
+moths <-read.csv("moths_traps.csv") %>% 
   gather(key = "trap", value = "count", -Location)
 
 #H0: There's no difference in the number of moths counted w.r.t. 
 #the different trap types at each location.
 #H1: There is a difference
 
-moths.summary<- moths %>% 
+moths.summary <- moths %>% 
   group_by(Location) %>% 
   summarise(moths.mn = mean(count),
             moths.sd = sd(count))
@@ -116,17 +117,17 @@ plot(moths.tukey)
   
 
 
-plt1 <-ggplot(data = moths, aes(x= Location, y = count))+
+plt1 <- ggplot(data = moths, aes(x= Location, y = count))+
          geom_boxplot() +
-  geom_jitter(width = 0.05, shape =21)
+  geom_jitter(width = 0.05, shape = 21)
 
-plt2 <-ggplot(data = moths, aes(x = trap, y = count )) +
+plt2 <- ggplot(data = moths, aes(x = trap, y = count )) +
   geom_boxplot()+
   geom_jitter(width = 0.05, shape = 21)
 
-plt3 <-ggplot(data = moths, aes(x = Location, y = count)) +
+plt3 <- ggplot(data = moths, aes(x = Location, y = count)) +
        geom_boxplot(aes(fill = trap)) +
-  geom_jitter(width = 0.05, shape =21)
+  geom_jitter(width = 0.05, shape = 21)
 
 ggarrange(plt1,plt2,plt3, labels = "Auto", ncol = 2, nrow = 2)
 
